@@ -15,3 +15,8 @@ UNCAPABILITYS
 - PiPy does not yet support python input()
     NOTE: DO NOT PROMPT INPUT()! IT WILL GLITCH THE PROGRAM
 ```
+
+## Dependancies
+- easygui (popups)
+- idlelib and re (syntax highlighting)
+- tkinter (gui)
