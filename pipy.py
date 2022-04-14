@@ -1,10 +1,8 @@
 from tkinter import *
 from tkinter.ttk import *
-from threading import Thread
 import idlelib.colorizer as ic
 import idlelib.percolator as ip
 import re
-import traceback
 import sys
 import easygui
 
@@ -25,8 +23,7 @@ CREATING AND RUNNING A PROJECT
         If you have already saved the file, then "Save" will save it to the file you have already set.
         "Save As" will always prompt for a new file name.
 UNCAPABILITYS
-- PiPy does not yet support python input()
-    NOTE: DO NOT PROMPT INPUT()! IT WILL GLITCH THE PROGRAM
+- local modules, such as "C:\\users\\desvasicek\\project\\module.py" does not work with "import module"
 """
     
     console.insert("end", "\n\n" + details)
@@ -58,7 +55,7 @@ def save_as():
 def run():
     try:
         sys.stdout = open("test.txt", "w")
-        exec(code.get("1.0", "end"))
+        exec(code.get("1.0", "end").replace("input(", "easygui.enterbox("))
         sys.stdout.close()
         printed_text = open("test.txt", "r").readlines()
         console.insert("end", "\n\n" + "".join(printed_text))
@@ -106,3 +103,4 @@ cdg.tagdefs['DEFINITION'] = {'foreground': '#007F7F', 'background': '#FFFFFF'}
 ip.Percolator(code).insertfilter(cdg)
 
 pipy.mainloop()
+
