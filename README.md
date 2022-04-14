@@ -12,8 +12,7 @@ CREATING AND RUNNING A PROJECT
         If you have already saved the file, then "Save" will save it to the file you have already set.
         "Save As" will always prompt for a new file name.
 UNCAPABILITYS
-- PiPy does not yet support python input()
-    NOTE: DO NOT PROMPT INPUT()! IT WILL GLITCH THE PROGRAM
+- local modules, such as "C:\\users\\desvasicek\\project\\module.py" does not work with "import module"
 ```
 
 ## Dependancies
