@@ -58,11 +58,28 @@ def run():
         exec(code.get("1.0", "end").replace("input(", "easygui.enterbox("))
         sys.stdout.close()
         printed_text = open("test.txt", "r").readlines()
+        console.config(state="normal")
         console.insert("end", "\n\n" + "".join(printed_text))
+        console.config(state="disabled")
     except Exception as e:
         printed_text = open("test.txt", "r").readlines()
+        console.config(state="normal")
         console.insert("end", "\n\n" + "".join(printed_text) + "\n(" + str(e) +")")
+        console.config(state="disabled")
 
+def open_file():
+    file = easygui.fileopenbox("Choose File to Open", "Choose File")
+    print(file)
+    text = open(file, "r").read()
+    path = file
+    title = file.split("/")
+    title = title[len(title) - 1]
+    pipy.title("PiPy - " + title)
+    console.config(state="normal")
+    console.insert("end", "\n\nOpening " + title + "...")
+    console.config(state="disabled")
+    code.delete("1.0", "end")
+    code.insert("1.0", text)
 pipy = Tk()
 pipy.geometry("900x900")
 pipy.title("PiPy - *untitled*")
@@ -74,12 +91,21 @@ file_menu.add_command(label="Save As", command=save_as)
 file_menu.add_command(label="Run", command=run)
 file_menu.add_separator()
 file_menu.add_command(label="Quit", command=quit)
+open_menu = Menu(menu)
+open_menu.add_command(label="New")
+open_menu.add_command(label="Open", command=open_file)
+open_menu.add_separator()
+open_menu.add_command(label="Close")
+menu.add_cascade(label="Open", menu=open_menu)
 menu.add_cascade(label="File", menu=file_menu)
 pipy.config(menu=menu)
-code = Text(pipy)
-code.place(x=0, y=0, width=900, height=770)
+scroll = Scrollbar(pipy)
+scroll.place(x=880, y=0, height=770, width=20)
+code = Text(pipy, yscrollcommand=scroll.set)
+code.place(x=0, y=0, width=880, height=770)
 code.bind("<KeyRelease>", setunsaved)
-console = Text(pipy)
+scroll.config(command=code.yview)
+console = Text(pipy, state='disabled')
 console.place(x=0, y=770, width=900, height=130)
 console.insert("1.0", """PiPy v1.0 on """ + sys.platform + """\nPiPy is a simple open source python-made Python IDE. Type "more()" for more information.""")
 try:
@@ -87,7 +113,9 @@ try:
     saved = True
     code.insert("1.0", open(sys.argv[1]).read())
     pipy.title("PiPy - " + name)
+    console.config(state="normal")
     console.insert("end", "\n\nOpening " + name + "...")
+    console.config(state="disabled")
 except Exception as e:
     console.insert("end", "\n\nOpening a new file...")
 cdg = ic.ColorDelegator()
@@ -103,4 +131,5 @@ cdg.tagdefs['DEFINITION'] = {'foreground': '#007F7F', 'background': '#FFFFFF'}
 ip.Percolator(code).insertfilter(cdg)
 
 pipy.mainloop()
+
 
