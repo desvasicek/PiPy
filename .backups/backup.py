@@ -24,7 +24,6 @@ CREATING AND RUNNING A PROJECT
         "Save As" will always prompt for a new file name.
 UNCAPABILITYS
 - local modules, such as "C:\\users\\desvasicek\\project\\module.py" does not work with "import module"
-- loops (the program will glitch until the loop finishes)
 """
     console.config(state="normal")
     console.insert("end", "\n\n" + details)
@@ -38,12 +37,7 @@ def setunsaved(e):
 def save():
     global name
     if not name:
-        filepath = easygui.diropenbox("Choose location to save", "Choose Location")
-        if not filepath.endswith("/"):
-            name = filepath + "/" + easygui.enterbox("File Name", "Please Enter File Name")
-        else:
-            name = filepath + easygui.enterbox("File Name", "Please Enter File Name")
-        
+        name = easygui.enterbox("File Name", "Please Enter File Name")
     file = open(name, mode="w")
     file.write(code.get("1.0", "end"))
     file.close()
@@ -52,20 +46,16 @@ def save():
 
 def save_as():
     global name
-    filepath = easygui.diropenbox("Choose location to save", "Choose Location")
-        if not filepath.endswith("/"):
-            name = filepath + "/" + easygui.enterbox("File Name", "Please Enter File Name")
-        else:
-            name = filepath + easygui.enterbox("File Name", "Please Enter File Name")
+    name = easygui.enterbox("File Name", "Please Enter File Name")
     pipy.title("PiPy - " + name)
     file = open(name, mode="w")
     file.write(code.get("1.0", "end"))
     file.close()
     saved = True
 
-def run(e):
+def run():
     try:
-        sys.stdout = open("_console.txt", "w")
+        sys.stdout = open("test.txt", "w")
         exec(code.get("1.0", "end").replace("input(", "easygui.enterbox("))
         sys.stdout.close()
         printed_text = open("test.txt", "r").readlines()
@@ -73,7 +63,7 @@ def run(e):
         console.insert("end", "\n\n" + "".join(printed_text))
         console.config(state="disabled")
     except Exception as e:
-        printed_text = open("_console.txt", "r").readlines()
+        printed_text = open("test.txt", "r").readlines()
         console.config(state="normal")
         console.insert("end", "\n\n" + "".join(printed_text) + "\n(" + str(e) +")")
         console.config(state="disabled")
@@ -95,7 +85,6 @@ def open_file():
     code.insert("1.0", text)
     name = title
 def new_file():
-    global name
     saveq = easygui.ynbox("Do you want to save this file?", "Save?")
     if saveq:
         save()
@@ -124,7 +113,6 @@ scroll.place(x=880, y=0, height=770, width=20)
 code = Text(pipy, yscrollcommand=scroll.set)
 code.place(x=0, y=0, width=880, height=770)
 code.bind("<KeyRelease>", setunsaved)
-pipy.bind("<F5>", run)
 scroll.config(command=code.yview)
 console = Text(pipy, state='disabled')
 console.place(x=0, y=770, width=900, height=130)
